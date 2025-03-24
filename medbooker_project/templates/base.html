@@ -40,9 +40,17 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav me-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'core:home' %}">Home</a>
-                    </li>
+                    {% if user.is_authenticated %}
+                    {% if user.user_type == 'doctor' %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'doctors:dashboard' %}">Home</a>
+                        </li>
+                    {% elif user.user_type == 'patient' %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'patients:dashboard' %}">Home</a>
+                        </li>
+                        {% endif %}
+                    {% endif %}
                     {% if user.is_authenticated and user.user_type == 'patient' %}
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'core:find_doctor' %}">Find Doctor</a>
