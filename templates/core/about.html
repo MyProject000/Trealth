@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+
+{% block title %}About Us - Medical Appointment System{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <h1>About Medical Appointment System</h1>
+        <hr>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-8">
+        <h3>Our Mission</h3>
+        <p>Medical Appointment System is designed to revolutionize how patients connect with healthcare providers. Our mission is to make quality healthcare accessible to everyone through a seamless appointment booking experience.</p>
+        
+        <h3>Who We Are</h3>
+        <p>Founded in 2025, our platform brings together the best doctors and patients in a user-friendly environment that prioritizes health and wellness. We believe that technology can bridge the gap between healthcare providers and those seeking medical attention.</p>
+        
+        <h3>What We Offer</h3>
+        <ul>
+            <li>Easy appointment scheduling with specialists</li>
+            <li>Secure medical records management</li>
+            <li>Comprehensive doctor profiles with verified credentials</li>
+            <li>Convenient payment processing</li>
+            <li>Digital prescriptions and follow-ups</li>
+        </ul>
+        
+        <h3>Our Values</h3>
+        <p>We are guided by our commitment to:</p>
+        <ul>
+            <li><strong>Accessibility:</strong> Making healthcare available to everyone regardless of location</li>
+            <li><strong>Privacy:</strong> Ensuring the highest standards of data protection</li>
+            <li><strong>Quality:</strong> Partnering with verified healthcare professionals</li>
+            <li><strong>Innovation:</strong> Constantly improving our platform based on user feedback</li>
+            <li><strong>Compassion:</strong> Remembering that healthcare is fundamentally about helping people</li>
+        </ul>
+    </div>
+    
+    <div class="col-md-4">
+        <div class="card mb-4">
+            <div class="card-body">
+                <h5 class="card-title">Find a Doctor Today</h5>
+                <p class="card-text">Ready to experience better healthcare access? Browse our network of specialists and book your appointment now.</p>
+                <a href="{% url 'core:find_doctor' %}" class="btn btn-primary">Find a Doctor</a>
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Contact Us</h5>
+                <p class="card-text">Have questions or feedback? Our team is here to help.</p>
+                <a href="{% url 'core:contact' %}" class="btn btn-outline-primary">Get in Touch</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

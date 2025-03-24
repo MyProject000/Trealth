@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+
+{% block title %}Confirm Appointment - Medical Appointment System{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8 offset-md-2">
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h4 class="mb-0">Confirm Your Appointment</h4>
+            </div>
+            <div class="card-body">
+                <div class="alert alert-info">
+                    Please review the appointment details below before confirming.
+                </div>
+                
+                <h5 class="mb-3">Appointment Details</h5>
+                <div class="row mb-3">
+                    <div class="col-md-4 fw-bold">Doctor:</div>
+                    <div class="col-md-8">Dr. {{ appointment.doctor.full_name }}</div>
+                </div>
+                
+                <div class="row mb-3">
+                    <div class="col-md-4 fw-bold">Specialization:</div>
+                    <div class="col-md-8">{{ appointment.doctor.specialization }}</div>
+                </div>
+                
+                <div class="row mb-3">
+                    <div class="col-md-4 fw-bold">Date & Time:</div>
+                    <div class="col-md-8">{{ appointment.appointment_date }}</div>
+                </div>
+                
+                <div class="row mb-3">
+                    <div class="col-md-4 fw-bold">Hospital/Clinic:</div>
+                    <div class="col-md-8">{{ appointment.doctor.hospital_name }}, {{ appointment.doctor.hospital_location }}</div>
+                </div>
+                
+                <div class="row mb-3">
+                    <div class="col-md-4 fw-bold">Consultation Fee:</div>
+                    <div class="col-md-8">${{ appointment.doctor.consultation_fee }}</div>
+                </div>
+                
+                {% if appointment.symptoms_description %}
+                    <div class="row mb-3">
+                        <div class="col-md-4 fw-bold">Symptoms:</div>
+                        <div class="col-md-8">{{ appointment.symptoms_description }}</div>
+                    </div>
+                {% endif %}
+                
+                <hr>
+                
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="form-check mb-3">
+                        <input class="form-check-input" type="checkbox" id="terms_agree" name="terms_agree" required>
+                        <label class="form-check-label" for="terms_agree">
+                            I agree to the appointment terms and policies.
+                        </label>
+                    </div>
+                    
+                    <div class="d-grid gap-2">
+                        <button type="submit" name="action" value="confirm" class="btn btn-success">Confirm Appointment</button>
+                        <a href="{% url 'patients:book_appointment' %}" class="btn btn-outline-secondary">Back to Booking</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

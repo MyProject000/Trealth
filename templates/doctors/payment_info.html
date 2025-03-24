@@ -1,0 +1,108 @@
+{% extends 'base.html' %}
+
+{% block title %}Payment Information - Medical Appointment System{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <h1>Payment Information</h1>
+        <p>Track your earnings and consultation payments.</p>
+        <hr>
+    </div>
+</div>
+
+<div class="row mb-4">
+    <div class="col-md-4">
+        <div class="card bg-success text-white">
+            <div class="card-body text-center">
+                <h5 class="card-title">Total Earnings</h5>
+                <h2 class="display-4">£{{ total_earnings }}</h2>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4">
+        <div class="card bg-primary text-white">
+            <div class="card-body text-center">
+                <h5 class="card-title">Completed Appointments</h5>
+                <h2 class="display-4">{{ completed_appointments.count }}</h2>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4">
+        <div class="card bg-info text-white">
+            <div class="card-body text-center">
+                <h5 class="card-title">Consultation Fee</h5>
+                <h2 class="display-4">£{{ doctor.consultation_fee }}</h2>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <h5>Recent Payments</h5>
+            </div>
+            <div class="card-body">
+                {% if completed_appointments %}
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Patient</th>
+                                    <th>Date</th>
+                                    <th>Amount</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for appointment in completed_appointments %}
+                                    <tr>
+                                        <td>{{ appointment.patient.full_name }}</td>
+                                        <td>{{ appointment.appointment_date|date }}</td>
+                                        <td>£{{ doctor.consultation_fee }}</td>
+                                        <td>
+                                            {% if appointment.payments.exists %}
+                                                <span class="badge bg-success">Paid</span>
+                                            {% else %}
+                                                <span class="badge bg-warning text-dark">Pending</span>
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <div class="alert alert-info">
+                        No completed appointments found.
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <h5>Payment Settings</h5>
+            </div>
+            <div class="card-body">
+                <form method="post" action="{% url 'doctors:profile' %}">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="consultation_fee" class="form-label">Consultation Fee (£)</label>
+                        <input type="number" class="form-control" id="consultation_fee" name="consultation_fee" value="{{ doctor.consultation_fee }}" step="0.01">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Update Fee</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

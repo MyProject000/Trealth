@@ -1,0 +1,87 @@
+{% extends 'base.html' %}
+
+{% block title %}Medical Record - Medical Appointment System{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-10 offset-md-1">
+        <div class="card">
+            <div class="card-header bg-info text-white d-flex justify-content-between align-items-center">
+                <h4 class="mb-0">Medical Record #{{ record.record_id }}</h4>
+                <span class="badge bg-light text-dark">{{ record.created_at|date }}</span>
+            </div>
+            <div class="card-body">
+                <div class="row mb-4">
+                    <div class="col-md-6">
+                        <h5>Patient Information</h5>
+                        <p><strong>Name:</strong> {{ record.patient.full_name }}</p>
+                        <p><strong>Gender:</strong> {{ record.patient.gender }}</p>
+                        <p><strong>Date of Birth:</strong> {{ record.patient.date_of_birth }}</p>
+                        <p><strong>Blood Type:</strong> {{ record.patient.blood_type }}</p>
+                        <p><strong>Allergies:</strong> {{ record.patient.allergies|default:"None" }}</p>
+                    </div>
+                    <div class="col-md-6">
+                        <h5>Doctor Information</h5>
+                        <p><strong>Name:</strong> Dr. {{ record.doctor.full_name }}</p>
+                        <p><strong>Specialization:</strong> {{ record.doctor.specialization }}</p>
+                        <p><strong>Hospital:</strong> {{ record.doctor.hospital_name }}</p>
+                        <p><strong>Appointment Date:</strong> {{ record.appointment.appointment_date }}</p>
+                    </div>
+                </div>
+                
+                <hr>
+                
+                <div class="row mb-4">
+                    <div class="col-md-12">
+                        <h5>Diagnosis</h5>
+                        <div class="p-3 bg-light rounded">
+                            {{ record.diagnosis|linebreaks }}
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="row mb-4">
+                    <div class="col-md-12">
+                        <h5>Treatment Plan</h5>
+                        <div class="p-3 bg-light rounded">
+                            {{ record.treatment_plan|linebreaks }}
+                        </div>
+                    </div>
+                </div>
+                
+                {% if record.documents.exists %}
+                    <div class="row mb-4">
+                        <div class="col-md-12">
+                            <h5>Attached Documents</h5>
+                            <ul class="list-group">
+                                {% for document in record.documents.all %}
+                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                        {{ document.file_name }}
+                                        <span>
+                                            <a href="{{ document.file.url }}" class="btn btn-sm btn-outline-info" target="_blank">View</a>
+                                            <a href="{{ document.file.url }}" class="btn btn-sm btn-outline-secondary" download>Download</a>
+                                        </span>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+                {% endif %}
+                
+                <div class="d-flex justify-content-between mt-4">
+                    {% if user.user_type == 'doctor' %}
+                        <a href="{% url 'doctors:medical_records' %}" class="btn btn-outline-secondary">Back to Records</a>
+                    {% else %}
+                        <a href="{% url 'patients:medical_history' %}" class="btn btn-outline-secondary">Back to Medical History</a>
+                    {% endif %}
+                    
+                    <div>
+                        <a href="{% url 'medical_records:download_prescription' record.record_id %}" class="btn btn-primary">Download Prescription</a>
+                        <a href="{% url 'medical_records:upload_documents' %}?record={{ record.record_id }}" class="btn btn-info">Upload Documents</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,240 @@
+{% extends 'base.html' %}
+
+{% block title %}Analytics & Reports - Medical Appointment System{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <h1>Analytics & Reports</h1>
+        <p>View system statistics and generate reports.</p>
+        <hr>
+    </div>
+</div>
+
+<div class="row mb-4">
+    <div class="col-md-3">
+        <div class="card bg-primary text-white">
+            <div class="card-body text-center">
+                <h5 class="card-title">Total Users</h5>
+                <h2 class="display-4">{{ total_doctors|add:total_patients }}</h2>
+                <p>Doctors: {{ total_doctors }} | Patients: {{ total_patients }}</p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-3">
+        <div class="card bg-success text-white">
+            <div class="card-body text-center">
+                <h5 class="card-title">Total Appointments</h5>
+                <h2 class="display-4">{{ total_appointments }}</h2>
+                <p>Completed: {{ completed_appointments }}</p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-3">
+        <div class="card bg-info text-white">
+            <div class="card-body text-center">
+                <h5 class="card-title">This Week</h5>
+                <h2 class="display-4">{{ weekly_appointments }}</h2>
+                <p>New appointments this week</p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-3">
+        <div class="card bg-warning text-dark">
+            <div class="card-body text-center">
+                <h5 class="card-title">Revenue</h5>
+                <h2 class="display-4">${{ total_earnings }}</h2>
+                <p>From {{ completed_appointments }} appointments</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mb-4">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Appointments by Status</h5>
+            </div>
+            <div class="card-body">
+                <canvas id="appointmentStatusChart" height="250"></canvas>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Top Specializations</h5>
+            </div>
+            <div class="card-body">
+                <canvas id="specializationChart" height="250"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mb-4">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">Monthly Appointments</h5>
+                <div class="btn-group" role="group">
+                    <button type="button" class="btn btn-outline-primary btn-sm">This Year</button>
+                    <button type="button" class="btn btn-outline-primary btn-sm">Last Year</button>
+                </div>
+            </div>
+            <div class="card-body">
+                <canvas id="monthlyAppointmentsChart" height="100"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">Generate Reports</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-3 mb-3">
+                        <div class="card">
+                            <div class="card-body text-center">
+                                <i class="bi bi-calendar-check fs-1 mb-3 text-primary"></i>
+                                <h5>Appointment Report</h5>
+                                <p class="text-muted">Summary of all appointments</p>
+                                <button type="button" class="btn btn-outline-primary btn-sm">Generate</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-3 mb-3">
+                        <div class="card">
+                            <div class="card-body text-center">
+                                <i class="bi bi-cash-coin fs-1 mb-3 text-success"></i>
+                                <h5>Financial Report</h5>
+                                <p class="text-muted">Revenue and payment details</p>
+                                <button type="button" class="btn btn-outline-primary btn-sm">Generate</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-3 mb-3">
+                        <div class="card">
+                            <div class="card-body text-center">
+                                <i class="bi bi-people fs-1 mb-3 text-info"></i>
+                                <h5>User Activity Report</h5>
+                                <p class="text-muted">User engagement metrics</p>
+                                <button type="button" class="btn btn-outline-primary btn-sm">Generate</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-3 mb-3">
+                        <div class="card">
+                            <div class="card-body text-center">
+                                <i class="bi bi-graph-up fs-1 mb-3 text-warning"></i>
+                                <h5>Growth Report</h5>
+                                <p class="text-muted">Platform growth statistics</p>
+                                <button type="button" class="btn btn-outline-primary btn-sm">Generate</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    // Appointments by Status Chart
+    const statusCtx = document.getElementById('appointmentStatusChart').getContext('2d');
+    const statusChart = new Chart(statusCtx, {
+        type: 'pie',
+        data: {
+            labels: ['Scheduled', 'Completed', 'Cancelled', 'No Show'],
+            datasets: [{
+                data: [25, 45, 20, 10],
+                backgroundColor: [
+                    '#0d6efd',
+                    '#198754',
+                    '#dc3545',
+                    '#6c757d'
+                ]
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'bottom'
+                }
+            }
+        }
+    });
+
+    // Top Specializations Chart
+    const specCtx = document.getElementById('specializationChart').getContext('2d');
+    const specChart = new Chart(specCtx, {
+        type: 'bar',
+        data: {
+            labels: ['Cardiology', 'Dermatology', 'Neurology', 'Orthopedics', 'Pediatrics'],
+            datasets: [{
+                label: 'Number of Appointments',
+                data: [65, 59, 80, 81, 56],
+                backgroundColor: '#0d6efd'
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    display: false
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+
+    // Monthly Appointments Chart
+    const monthlyCtx = document.getElementById('monthlyAppointmentsChart').getContext('2d');
+    const monthlyChart = new Chart(monthlyCtx, {
+        type: 'line',
+        data: {
+            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+            datasets: [{
+                label: 'Appointments',
+                data: [65, 59, 80, 81, 56, 55, 40, 45, 60, 70, 75, 80],
+                borderColor: '#0d6efd',
+                tension: 0.1,
+                fill: false
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    display: false
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+</script>
+{% endblock %}

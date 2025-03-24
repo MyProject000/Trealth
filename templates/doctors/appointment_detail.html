@@ -1,0 +1,183 @@
+{% extends 'base.html' %}
+
+{% block title %}Appointment Details - Medical Appointment System{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-10 offset-md-1">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h1>Appointment Details</h1>
+            <span class="badge {% if appointment.status == 'scheduled' %}bg-primary{% elif appointment.status == 'completed' %}bg-success{% elif appointment.status == 'cancelled' %}bg-danger{% else %}bg-secondary{% endif %} fs-6">
+                {{ appointment.status|title }}
+            </span>
+        </div>
+        <hr>
+
+        <div class="card mb-4">
+            <div class="card-header bg-primary text-white">
+                <h4 class="mb-0">Appointment Information</h4>
+            </div>
+            <div class="card-body">
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <p><strong>Appointment ID:</strong> #{{ appointment.appointment_id }}</p>
+                        <p><strong>Patient:</strong> {{ appointment.patient.full_name }}</p>
+                        <p><strong>Email:</strong> {{ appointment.patient.user.email }}</p>
+                        <p><strong>Gender:</strong> {{ appointment.patient.gender }}</p>
+                        <p><strong>Blood Type:</strong> {{ appointment.patient.blood_type }}</p>
+                    </div>
+                    <div class="col-md-6">
+                        <p><strong>Date:</strong> {{ appointment.appointment_date|date }}</p>
+                        <p><strong>Time:</strong> {{ appointment.appointment_date|time }}</p>
+                        <p><strong>Status:</strong> 
+                            <span class="badge {% if appointment.status == 'scheduled' %}bg-primary{% elif appointment.status == 'completed' %}bg-success{% elif appointment.status == 'cancelled' %}bg-danger{% else %}bg-secondary{% endif %}">
+                                {{ appointment.status|title }}
+                            </span>
+                        </p>
+                        <p><strong>Consultation Fee:</strong> £{{ appointment.doctor.consultation_fee }}</p>
+                        {% if appointment.symptoms_description %}
+                            <p><strong>Symptoms:</strong> {{ appointment.symptoms_description }}</p>
+                        {% endif %}
+                    </div>
+                </div>
+
+                {% if appointment.status == 'scheduled' %}
+                    <div class="d-flex justify-content-between">
+                        <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#cancelModal">
+                            <i class="bi bi-x-circle me-1"></i> Cancel Appointment
+                        </button>
+                        <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#completeModal">
+                            <i class="bi bi-check-circle me-1"></i> Mark as Completed
+                        </button>
+                    </div>
+                {% elif appointment.status == 'cancelled' and appointment.cancel_reason %}
+                    <div class="alert alert-danger">
+                        <h5>Cancellation Reason:</h5>
+                        <p>{{ appointment.cancel_reason }}</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+
+        {% if has_payment %}
+            <div class="card mb-4">
+                <div class="card-header bg-success text-white">
+                    <h4 class="mb-0">Payment Information</h4>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <p><strong>Payment ID:</strong> #{{ payment.payment_id }}</p>
+                            <p><strong>Amount:</strong> £{{ payment.amount }}</p>
+                            <p><strong>Date:</strong> {{ payment.payment_date }}</p>
+                        </div>
+                        <div class="col-md-6">
+                            <p><strong>Status:</strong> 
+                                <span class="badge {% if payment.payment_status == 'completed' %}bg-success{% elif payment.payment_status == 'pending' %}bg-warning text-dark{% else %}bg-secondary{% endif %}">
+                                    {{ payment.payment_status|title }}
+                                </span>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+
+        {% if has_record %}
+            <div class="card mb-4">
+                <div class="card-header bg-info text-white">
+                    <h4 class="mb-0">Medical Record</h4>
+                </div>
+                <div class="card-body">
+                    <div class="row mb-3">
+                        <div class="col-md-12">
+                            <h5>Diagnosis</h5>
+                            <p>{{ medical_record.diagnosis }}</p>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-12">
+                            <h5>Treatment Plan</h5>
+                            <p>{{ medical_record.treatment_plan }}</p>
+                        </div>
+                    </div>
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                        <a href="{% url 'medical_records:view_record' medical_record.record_id %}" class="btn btn-info">
+                            <i class="bi bi-file-earmark-medical me-1"></i> View Full Record
+                        </a>
+                    </div>
+                </div>
+            </div>
+        {% elif appointment.status == 'completed' and not has_record %}
+            <div class="card mb-4">
+                <div class="card-header bg-warning text-dark">
+                    <h4 class="mb-0">Create Medical Record</h4>
+                </div>
+                <div class="card-body">
+                    <p>This appointment has been marked as completed. Please create a medical record for the patient.</p>
+                    <div class="d-grid">
+                        <a href="{% url 'medical_records:create_record' appointment.appointment_id %}" class="btn btn-primary">
+                            <i class="bi bi-file-earmark-plus me-1"></i> Create Medical Record
+                        </a>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+
+        <div class="d-flex justify-content-between">
+            <a href="{% url 'doctors:manage_appointments' %}" class="btn btn-outline-secondary">
+                <i class="bi bi-arrow-left me-1"></i> Back to Appointments
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- Cancel Modal -->
+<div class="modal fade" id="cancelModal" tabindex="-1" aria-labelledby="cancelModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="cancelModalLabel">Cancel Appointment</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form method="post">
+                {% csrf_token %}
+                <div class="modal-body">
+                    <p>Are you sure you want to cancel this appointment?</p>
+                    <div class="mb-3">
+                        <label for="cancel_reason" class="form-label">Reason for Cancellation</label>
+                        <textarea class="form-control" id="cancel_reason" name="cancel_reason" rows="3" required></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" name="action" value="cancel" class="btn btn-danger">Cancel Appointment</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Complete Modal -->
+<div class="modal fade" id="completeModal" tabindex="-1" aria-labelledby="completeModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="completeModalLabel">Complete Appointment</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form method="post">
+                {% csrf_token %}
+                <div class="modal-body">
+                    <p>Mark this appointment as completed?</p>
+                    <p>This will allow you to create a medical record for this patient.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" name="action" value="complete" class="btn btn-success">Complete Appointment</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

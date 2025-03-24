@@ -1,0 +1,87 @@
+{% extends 'base.html' %}
+
+{% block title %}Medical Records - Medical Appointment System{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <h1>Patient Medical Records</h1>
+        <p>View and manage medical records for your patients.</p>
+        <hr>
+    </div>
+</div>
+
+<div class="row mb-4">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <h5>Search Records</h5>
+            </div>
+            <div class="card-body">
+                <form method="get" class="row g-3">
+                    <div class="col-md-4">
+                        <label for="patient" class="form-label">Patient Name</label>
+                        <input type="text" class="form-control" id="patient" name="patient" value="{{ request.GET.patient|default:'' }}">
+                    </div>
+                    <div class="col-md-4">
+                        <label for="date_from" class="form-label">Date From</label>
+                        <input type="date" class="form-control" id="date_from" name="date_from" value="{{ request.GET.date_from|default:'' }}">
+                    </div>
+                    <div class="col-md-4">
+                        <label for="date_to" class="form-label">Date To</label>
+                        <input type="date" class="form-control" id="date_to" name="date_to" value="{{ request.GET.date_to|default:'' }}">
+                    </div>
+                    <div class="col-md-12">
+                        <button type="submit" class="btn btn-primary">Search</button>
+                        <a href="{% url 'doctors:medical_records' %}" class="btn btn-outline-secondary">Reset</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <h5>Medical Records</h5>
+            </div>
+            <div class="card-body">
+                {% if records %}
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Record ID</th>
+                                    <th>Patient</th>
+                                    <th>Date</th>
+                                    <th>Diagnosis</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for record in records %}
+                                    <tr>
+                                        <td>{{ record.record_id }}</td>
+                                        <td>{{ record.patient.full_name }}</td>
+                                        <td>{{ record.created_at|date }}</td>
+                                        <td>{{ record.diagnosis|truncatechars:50 }}</td>
+                                        <td>
+                                            <a href="{% url 'medical_records:view_record' record.record_id %}" class="btn btn-sm btn-info">View</a>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <div class="alert alert-info">
+                        No medical records found.
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

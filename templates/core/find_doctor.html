@@ -1,0 +1,87 @@
+{% extends 'base.html' %}
+
+{% block title %}Find a Doctor - Medical Appointment System{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <h1>Find a Doctor</h1>
+        <hr>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-4 mb-4">
+        <div class="card">
+            <div class="card-header">
+                <h5>Search Filters</h5>
+            </div>
+            <div class="card-body">
+                <form method="get">
+                    <div class="mb-3">
+                        <label for="name" class="form-label">Doctor Name</label>
+                        <input type="text" class="form-control" id="name" name="name" value="{{ request.GET.name|default:'' }}">
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="specialization" class="form-label">Specialization</label>
+                        <select class="form-select" id="specialization" name="specialization">
+                            <option value="" {% if not request.GET.specialization %}selected{% endif %}>All Specializations</option>
+                            <option value="Cardiology" {% if request.GET.specialization == 'Cardiology' %}selected{% endif %}>Cardiology</option>
+                            <option value="Dermatology" {% if request.GET.specialization == 'Dermatology' %}selected{% endif %}>Dermatology</option>
+                            <option value="Neurology" {% if request.GET.specialization == 'Neurology' %}selected{% endif %}>Neurology</option>
+                            <option value="Orthopedics" {% if request.GET.specialization == 'Orthopedics' %}selected{% endif %}>Orthopedics</option>
+                            <option value="Pediatrics" {% if request.GET.specialization == 'Pediatrics' %}selected{% endif %}>Pediatrics</option>
+                            <option value="Psychiatry" {% if request.GET.specialization == 'Psychiatry' %}selected{% endif %}>Psychiatry</option>
+                            <option value="Ophthalmology" {% if request.GET.specialization == 'Ophthalmology' %}selected{% endif %}>Ophthalmology</option>
+                        </select>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="location" class="form-label">Location</label>
+                        <input type="text" class="form-control" id="location" name="location" value="{{ request.GET.location|default:'' }}">
+                    </div>
+                    
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-primary">Search</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-8">
+        <div class="row">
+            {% if doctors %}
+                {% for doctor in doctors %}
+                    <div class="col-md-6 mb-4">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <h5 class="card-title">Dr. {{ doctor.full_name }}</h5>
+                                <h6 class="card-subtitle mb-2 text-muted">{{ doctor.specialization }}</h6>
+                                <p class="card-text"><strong>Experience:</strong> {{ doctor.experience_years }} years</p>
+                                <p class="card-text"><strong>Hospital:</strong> {{ doctor.hospital_name }}</p>
+                                <p class="card-text"><strong>Location:</strong> {{ doctor.hospital_location }}</p>
+                                <p class="card-text"><strong>Consultation Fee:</strong> ${{ doctor.consultation_fee }}</p>
+                            </div>
+                            <div class="card-footer bg-white">
+                                {% if user.is_authenticated and user.user_type == 'patient' %}
+                                    <a href="{% url 'patients:book_appointment' %}?doctor={{ doctor.doctor_id }}" class="btn btn-primary btn-sm">Book Appointment</a>
+                                {% else %}
+                                    <a href="{% url 'accounts:login' %}?next={% url 'patients:book_appointment' %}?doctor={{ doctor.doctor_id }}" class="btn btn-primary btn-sm">Login to Book</a>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <div class="col-md-12">
+                    <div class="alert alert-info">
+                        No doctors found matching your criteria. Please try different search terms.
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

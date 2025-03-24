@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+
+{% block title %}Home - Medical Appointment System{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <div class="p-5 mb-4 bg-light rounded-3">
+            <div class="container-fluid py-5">
+                <h1 class="display-5 fw-bold">Medical Appointment System</h1>
+                <p class="col-md-8 fs-4">A comprehensive platform for managing doctor appointments, medical records, and healthcare services.</p>
+                <a href="{% url 'core:find_doctor' %}" class="btn btn-primary btn-lg">Find a Doctor</a>
+                {% if not user.is_authenticated %}
+                <a href="{% url 'accounts:signup' %}" class="btn btn-outline-primary btn-lg ms-2">Sign Up</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-md-4">
+        <div class="card mb-4">
+            <div class="card-body text-center">
+                <h5 class="card-title mt-3">Easy Appointment Booking</h5>
+                <p class="card-text">Book appointments with specialized doctors quickly and easily.</p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4">
+        <div class="card mb-4">
+            <div class="card-body text-center">
+                <h5 class="card-title mt-3">Medical Records</h5>
+                <p class="card-text">Access your medical history and prescriptions anytime, anywhere.</p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4">
+        <div class="card mb-4">
+            <div class="card-body text-center">
+                <h5 class="card-title mt-3">Secure Payments</h5>
+                <p class="card-text">Process payments securely and manage your billing information.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-2">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <h5>Featured Doctors</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    {% for doctor in featured_doctors %}
+                    <div class="col-md-3">
+                        <div class="card mb-3">
+                            <div class="card-body text-center">
+                                <h5 class="card-title">Dr. {{ doctor.full_name }}</h5>
+                                <p class="card-text text-muted">{{ doctor.specialization }}</p>
+                                <p class="card-text">{{ doctor.hospital_name }}</p>
+                                <a href="{% url 'core:find_doctor' %}?id={{ doctor.doctor_id }}" class="btn btn-sm btn-outline-primary">View Profile</a>
+                            </div>
+                        </div>
+                    </div>
+                    {% empty %}
+                    <div class="col-md-12">
+                        <p>No featured doctors available at the moment.</p>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,178 @@
+{% extends 'base.html' %}
+
+{% block title %}Compliance & Security - Medical Appointment System{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <h1>Compliance & Security</h1>
+        <p>Manage and monitor system security and regulatory compliance.</p>
+        <hr>
+    </div>
+</div>
+
+<div class="row mb-4">
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">System Security Status</h5>
+            </div>
+            <div class="card-body">
+                <div class="alert alert-success">
+                    <i class="bi bi-shield-check me-2"></i> System security is active and up to date.
+                </div>
+                <ul class="list-group">
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        Data Encryption
+                        <span class="badge bg-success">Active</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        Firewall Protection
+                        <span class="badge bg-success">Active</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        Intrusion Detection
+                        <span class="badge bg-success">Active</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        Regular Backups
+                        <span class="badge bg-success">Active</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        Security Updates
+                        <span class="badge bg-success">Up to date</span>
+                    </li>
+                </ul>
+                <div class="d-grid mt-3">
+                    <button type="button" class="btn btn-outline-primary">Run Security Scan</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Recent Security Logs</h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Timestamp</th>
+                                <th>Event Type</th>
+                                <th>Description</th>
+                                <th>IP Address</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>2025-03-20 12:30:45</td>
+                                <td>Login Attempt</td>
+                                <td>Admin login successful</td>
+                                <td>192.168.1.1</td>
+                                <td><span class="badge bg-success">Success</span></td>
+                            </tr>
+                            <tr>
+                                <td>2025-03-20 11:45:22</td>
+                                <td>Database Backup</td>
+                                <td>Automated system backup</td>
+                                <td>Internal</td>
+                                <td><span class="badge bg-success">Success</span></td>
+                            </tr>
+                            <tr>
+                                <td>2025-03-20 10:15:18</td>
+                                <td>Login Attempt</td>
+                                <td>Failed login - incorrect password</td>
+                                <td>203.0.113.42</td>
+                                <td><span class="badge bg-warning text-dark">Warning</span></td>
+                            </tr>
+                            <tr>
+                                <td>2025-03-20 09:30:05</td>
+                                <td>System Update</td>
+                                <td>Security patch installation</td>
+                                <td>Internal</td>
+                                <td><span class="badge bg-success">Success</span></td>
+                            </tr>
+                            <tr>
+                                <td>2025-03-19 17:22:38</td>
+                                <td>File Access</td>
+                                <td>Medical record accessed by authorized doctor</td>
+                                <td>192.168.1.45</td>
+                                <td><span class="badge bg-success">Success</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="d-grid">
+                    <button type="button" class="btn btn-outline-secondary">View All Logs</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Compliance Reports</h5>
+            </div>
+            <div class="card-body">
+                <p>Regulatory compliance status and reports:</p>
+                <ul class="list-group mb-3">
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        HIPAA Compliance Audit
+                        <span class="badge bg-success">Passed</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        Data Protection Compliance
+                        <span class="badge bg-success">Passed</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        Security Risk Assessment
+                        <span class="badge bg-success">Passed</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        Privacy Policy Verification
+                        <span class="badge bg-success">Passed</span>
+                    </li>
+                </ul>
+                <div class="d-grid">
+                    <button type="button" class="btn btn-outline-primary">Generate Compliance Report</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Data Protection</h5>
+            </div>
+            <div class="card-body">
+                <div class="mb-3">
+                    <h6>Data Retention Policy</h6>
+                    <p>Medical records are retained for 7 years in accordance with healthcare regulations. All personal data is handled according to our privacy policy.</p>
+                </div>
+                
+                <div class="mb-3">
+                    <h6>Data Access Controls</h6>
+                    <p>Role-based access controls are in place to ensure data is only accessible to authorized personnel.</p>
+                </div>
+                
+                <div class="alert alert-info">
+                    <i class="bi bi-info-circle-fill me-2"></i>
+                    The next scheduled data protection audit is on April 15, 2025.
+                </div>
+                
+                <div class="d-grid">
+                    <button type="button" class="btn btn-outline-primary">Manage Data Protection Settings</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,83 @@
+{% extends 'base.html' %}
+
+{% block title %}Medical History - Medical Appointment System{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <h1>Your Medical History</h1>
+        <p>View your complete medical records and history.</p>
+        <hr>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">Medical Records</h5>
+                <a href="{% url 'medical_records:upload_documents' %}" class="btn btn-primary btn-sm">Upload Documents</a>
+            </div>
+            <div class="card-body">
+                {% if medical_records %}
+                    <div class="accordion" id="medicalRecordsAccordion">
+                        {% for record in medical_records %}
+                            <div class="accordion-item">
+                                <h2 class="accordion-header" id="heading{{ record.record_id }}">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ record.record_id }}" aria-expanded="false" aria-controls="collapse{{ record.record_id }}">
+                                        <div class="d-flex w-100 justify-content-between">
+                                            <span>Dr. {{ record.doctor.full_name }} - {{ record.created_at|date }}</span>
+                                            <small class="text-muted">{{ record.doctor.specialization }}</small>
+                                        </div>
+                                    </button>
+                                </h2>
+                                <div id="collapse{{ record.record_id }}" class="accordion-collapse collapse" aria-labelledby="heading{{ record.record_id }}" data-bs-parent="#medicalRecordsAccordion">
+                                    <div class="accordion-body">
+                                        <h5>Diagnosis</h5>
+                                        <p>{{ record.diagnosis }}</p>
+                                        
+                                        <h5>Treatment Plan</h5>
+                                        <p>{{ record.treatment_plan }}</p>
+                                        
+                                        <div class="d-flex justify-content-end">
+                                            <a href="{% url 'medical_records:view_record' record.record_id %}" class="btn btn-info btn-sm me-2">View Full Record</a>
+                                            <a href="{% url 'medical_records:download_prescription' record.record_id %}" class="btn btn-outline-primary btn-sm">Download Prescription</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <div class="alert alert-info">
+                        No medical records found.
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <h5>Medical Information</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <p><strong>Blood Type:</strong> {{ patient.blood_type }}</p>
+                        <p><strong>Gender:</strong> {{ patient.gender }}</p>
+                        <p><strong>Date of Birth:</strong> {{ patient.date_of_birth }}</p>
+                    </div>
+                    <div class="col-md-6">
+                        <p><strong>Allergies:</strong> {{ patient.allergies|default:"None" }}</p>
+                        <p><strong>Emergency Contact:</strong> {{ patient.emergency_contact }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

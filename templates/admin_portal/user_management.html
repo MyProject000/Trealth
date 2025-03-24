@@ -1,0 +1,129 @@
+{% extends 'base.html' %}
+
+{% block title %}User Management - Medical Appointment System{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <h1>User Management</h1>
+        <p>Manage doctors and patients registered on the platform.</p>
+        <hr>
+    </div>
+</div>
+
+<div class="row mb-4">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <ul class="nav nav-tabs card-header-tabs" id="userTabs" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="doctors-tab" data-bs-toggle="tab" data-bs-target="#doctors" type="button" role="tab" aria-controls="doctors" aria-selected="true">Doctors</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="patients-tab" data-bs-toggle="tab" data-bs-target="#patients" type="button" role="tab" aria-controls="patients" aria-selected="false">Patients</button>
+                    </li>
+                </ul>
+            </div>
+            <div class="card-body">
+                <div class="tab-content" id="userTabsContent">
+                    <!-- Doctors Tab -->
+                    <div class="tab-pane fade show active" id="doctors" role="tabpanel" aria-labelledby="doctors-tab">
+                        <div class="d-flex justify-content-between mb-3">
+                            <form class="d-flex" method="get">
+                                <input class="form-control me-2" type="search" placeholder="Search doctors..." name="doctor_search" value="{{ request.GET.doctor_search|default:'' }}">
+                                <button class="btn btn-outline-primary" type="submit">Search</button>
+                            </form>
+                            <a href="#" class="btn btn-primary">Add New Doctor</a>
+                        </div>
+                        
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Name</th>
+                                        <th>Email</th>
+                                        <th>Specialization</th>
+                                        <th>Hospital</th>
+                                        <th>Joined Date</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for doctor in doctors %}
+                                        <tr>
+                                            <td>{{ doctor.doctor_id }}</td>
+                                            <td>{{ doctor.full_name }}</td>
+                                            <td>{{ doctor.user.email }}</td>
+                                            <td>{{ doctor.specialization }}</td>
+                                            <td>{{ doctor.hospital_name }}</td>
+                                            <td>{{ doctor.user.date_joined|date }}</td>
+                                            <td>
+                                                <a href="{% url 'admin_portal:user_detail' doctor.user.id %}" class="btn btn-sm btn-info">View</a>
+                                                <button type="button" class="btn btn-sm btn-warning">Edit</button>
+                                                <button type="button" class="btn btn-sm btn-danger">Disable</button>
+                                            </td>
+                                        </tr>
+                                    {% empty %}
+                                        <tr>
+                                            <td colspan="7" class="text-center">No doctors found.</td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    
+                    <!-- Patients Tab -->
+                    <div class="tab-pane fade" id="patients" role="tabpanel" aria-labelledby="patients-tab">
+                        <div class="d-flex justify-content-between mb-3">
+                            <form class="d-flex" method="get">
+                                <input class="form-control me-2" type="search" placeholder="Search patients..." name="patient_search" value="{{ request.GET.patient_search|default:'' }}">
+                                <button class="btn btn-outline-primary" type="submit">Search</button>
+                            </form>
+                            <a href="#" class="btn btn-primary">Add New Patient</a>
+                        </div>
+                        
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Name</th>
+                                        <th>Email</th>
+                                        <th>Gender</th>
+                                        <th>Location</th>
+                                        <th>Joined Date</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for patient in patients %}
+                                        <tr>
+                                            <td>{{ patient.patient_id }}</td>
+                                            <td>{{ patient.full_name }}</td>
+                                            <td>{{ patient.user.email }}</td>
+                                            <td>{{ patient.gender }}</td>
+                                            <td>{{ patient.location }}</td>
+                                            <td>{{ patient.user.date_joined|date }}</td>
+                                            <td>
+                                                <a href="{% url 'admin_portal:user_detail' patient.user.id %}" class="btn btn-sm btn-info">View</a>
+                                                <button type="button" class="btn btn-sm btn-warning">Edit</button>
+                                                <button type="button" class="btn btn-sm btn-danger">Disable</button>
+                                            </td>
+                                        </tr>
+                                    {% empty %}
+                                        <tr>
+                                            <td colspan="7" class="text-center">No patients found.</td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

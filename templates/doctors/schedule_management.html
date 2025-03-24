@@ -1,0 +1,157 @@
+{% extends 'base.html' %}
+
+{% block title %}Schedule Management - Medical Appointment System{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <h1>Schedule Management</h1>
+        <p>Manage your availability and appointment slots.</p>
+        <hr>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12 mb-4">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">Your Availabilities</h5>
+                <a href="{% url 'doctors:create_availability' %}" class="btn btn-primary btn-sm">Add New Availability</a>
+            </div>
+            <div class="card-body">
+                {% if availabilities %}
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Start Time</th>
+                                    <th>End Time</th>
+                                    <th>Max Appointments</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for availability in availabilities %}
+                                    <tr>
+                                        <td>{{ availability.date }}</td>
+                                        <td>{{ availability.start_time }}</td>
+                                        <td>{{ availability.end_time }}</td>
+                                        <td>{{ availability.max_appointments }}</td>
+                                        <td>
+                                            {% if availability.status == 'available' %}
+                                                <span class="badge bg-success">Available</span>
+                                            {% else %}
+                                                <span class="badge bg-secondary">Not Available</span>
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            <a href="{% url 'doctors:update_availability' availability.availability_id %}" class="btn btn-sm btn-info">Edit</a>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <div class="alert alert-info">
+                        You haven't set any availability yet. Click "Add New Availability" to get started.
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <h5>Calendar View</h5>
+            </div>
+            <div class="card-body">
+                <!-- This would ideally be a JavaScript calendar showing available days/times -->
+                <div class="alert alert-info">
+                    Calendar view shows your schedule visually. Green dates indicate available days.
+                </div>
+                
+                <div class="row text-center">
+                    <div class="col-md-12">
+                        <h4>March 2025</h4>
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Sun</th>
+                                    <th>Mon</th>
+                                    <th>Tue</th>
+                                    <th>Wed</th>
+                                    <th>Thu</th>
+                                    <th>Fri</th>
+                                    <th>Sat</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td>1</td>
+                                    <td>2</td>
+                                </tr>
+                                <tr>
+                                    <td>3</td>
+                                    <td>4</td>
+                                    <td>5</td>
+                                    <td>6</td>
+                                    <td>7</td>
+                                    <td>8</td>
+                                    <td>9</td>
+                                </tr>
+                                <tr>
+                                    <td>10</td>
+                                    <td class="bg-success bg-opacity-25">11</td>
+                                    <td class="bg-success bg-opacity-25">12</td>
+                                    <td>13</td>
+                                    <td>14</td>
+                                    <td class="bg-success bg-opacity-25">15</td>
+                                    <td>16</td>
+                                </tr>
+                                <tr>
+                                    <td>17</td>
+                                    <td class="bg-success bg-opacity-25">18</td>
+                                    <td class="bg-success bg-opacity-25">19</td>
+                                    <td class="bg-success bg-opacity-25">20</td>
+                                    <td>21</td>
+                                    <td>22</td>
+                                    <td>23</td>
+                                </tr>
+                                <tr>
+                                    <td>24</td>
+                                    <td>25</td>
+                                    <td>26</td>
+                                    <td>27</td>
+                                    <td>28</td>
+                                    <td>29</td>
+                                    <td>30</td>
+                                </tr>
+                                <tr>
+                                    <td>31</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

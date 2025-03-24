@@ -1,0 +1,117 @@
+{% extends 'base.html' %}
+
+{% block title %}Doctor Dashboard{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <h1>Welcome, Dr. {{ doctor.full_name }}</h1>
+        <p>Manage your appointments, schedules, and patient records.</p>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-md-3">
+        <div class="card bg-primary text-white mb-4">
+            <div class="card-body">
+                <h5 class="card-title">Total Appointments</h5>
+                <h2 class="display-4">{{ total_appointments }}</h2>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card bg-success text-white mb-4">
+            <div class="card-body">
+                <h5 class="card-title">Completed</h5>
+                <h2 class="display-4">{{ completed_appointments }}</h2>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card bg-info text-white mb-4">
+            <div class="card-body">
+                <h5 class="card-title">Today's Appointments</h5>
+                <h2 class="display-4">{{ today_appointments.count }}</h2>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card bg-warning text-white mb-4">
+            <div class="card-body">
+                <h5 class="card-title">Consultation Fee</h5>
+                <h2>£{{ doctor.consultation_fee }}</h2>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-md-6">
+        <div class="card mb-4">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5>Today's Appointments</h5>
+                <a href="{% url 'doctors:manage_appointments' %}" class="btn btn-sm btn-primary">View All</a>
+            </div>
+            <div class="card-body">
+                {% if today_appointments %}
+                    <div class="list-group">
+                        {% for appointment in today_appointments %}
+                            <a href="{% url 'doctors:appointment_detail' appointment.appointment_id %}" class="list-group-item list-group-item-action">
+                                <div class="d-flex w-100 justify-content-between">
+                                    <h5 class="mb-1">{{ appointment.patient.full_name }}</h5>
+                                    <small>{{ appointment.appointment_date|time }}</small>
+                                </div>
+                                <p class="mb-1">Status: {{ appointment.status }}</p>
+                            </a>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <p>No appointments scheduled for today.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-6">
+        <div class="card mb-4">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5>Upcoming Appointments</h5>
+                <a href="{% url 'doctors:manage_appointments' %}" class="btn btn-sm btn-primary">View All</a>
+            </div>
+            <div class="card-body">
+                {% if upcoming_appointments %}
+                    <div class="list-group">
+                        {% for appointment in upcoming_appointments %}
+                            <a href="{% url 'doctors:appointment_detail' appointment.appointment_id %}" class="list-group-item list-group-item-action">
+                                <div class="d-flex w-100 justify-content-between">
+                                    <h5 class="mb-1">{{ appointment.patient.full_name }}</h5>
+                                    <small>{{ appointment.appointment_date|date }}</small>
+                                </div>
+                                <p class="mb-1">Time: {{ appointment.appointment_date|time }}</p>
+                            </a>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <p>No upcoming appointments.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-2">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <h5>Quick Actions</h5>
+            </div>
+            <div class="card-body">
+                <a href="{% url 'doctors:schedule_management' %}" class="btn btn-primary me-2">Manage Schedule</a>
+                <a href="{% url 'doctors:create_availability' %}" class="btn btn-success me-2">Add Availability</a>
+                <a href="{% url 'doctors:medical_records' %}" class="btn btn-info me-2">Medical Records</a>
+                <a href="{% url 'doctors:payment_info' %}" class="btn btn-warning">Payment Info</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

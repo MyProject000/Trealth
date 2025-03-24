@@ -1,0 +1,145 @@
+{% extends 'base.html' %}
+
+{% block title %}Sign Up - Medical Appointment System{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8 offset-md-2">
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h4 class="mb-0">Create an Account</h4>
+            </div>
+            <div class="card-body">
+                {% if form.errors %}
+                    <div class="alert alert-danger">
+                        <p>Please correct the errors below:</p>
+                        <ul>
+                            {% for field in form %}
+                                {% for error in field.errors %}
+                                    <li>{{ field.label }}: {{ error }}</li>
+                                {% endfor %}
+                            {% endfor %}
+                            {% for error in form.non_field_errors %}
+                                <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                {% endif %}
+                
+                <form method="post">
+                    {% csrf_token %}
+                    
+                    <div class="mb-4">
+                        <h5>Account Type</h5>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="user_type" id="user_type_patient" value="patient"
+                                {% if request.POST.user_type == "patient" or not request.POST.user_type %}checked{% endif %}>
+                            <label class="form-check-label" for="user_type_patient">
+                                <i class="bi bi-person me-1"></i> Patient
+                            </label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="user_type" id="user_type_doctor" value="doctor"
+                                {% if request.POST.user_type == "doctor" %}checked{% endif %}>
+                            <label class="form-check-label" for="user_type_doctor">
+                                <i class="bi bi-hospital me-1"></i> Doctor
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <h5>Personal Information</h5>
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label for="{{ form.first_name.id_for_label }}" class="form-label">First Name</label>
+                            {{ form.first_name }}
+                            {% if form.first_name.errors %}
+                                <div class="text-danger">
+                                    {{ form.first_name.errors.0 }}
+                                </div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <label for="{{ form.last_name.id_for_label }}" class="form-label">Last Name</label>
+                            {{ form.last_name }}
+                            {% if form.last_name.errors %}
+                                <div class="text-danger">
+                                    {{ form.last_name.errors.0 }}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="{{ form.email.id_for_label }}" class="form-label">Email Address</label>
+                        {{ form.email }}
+                        {% if form.email.errors %}
+                            <div class="text-danger">
+                                {{ form.email.errors.0 }}
+                            </div>
+                        {% endif %}
+                        <div class="form-text">We'll never share your email with anyone else.</div>
+                    </div>
+                    
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label for="{{ form.password1.id_for_label }}" class="form-label">Password</label>
+                            {{ form.password1 }}
+                            {% if form.password1.errors %}
+                                <div class="text-danger">
+                                    {{ form.password1.errors.0 }}
+                                </div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <label for="{{ form.password2.id_for_label }}" class="form-label">Confirm Password</label>
+                            {{ form.password2 }}
+                            {% if form.password2.errors %}
+                                <div class="text-danger">
+                                    {{ form.password2.errors.0 }}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3 form-check">
+                        <input type="checkbox" class="form-check-input" id="agree_terms" name="agree_terms" required>
+                        <label class="form-check-label" for="agree_terms">
+                            I agree to the <a href="{% url 'core:terms' %}" target="_blank">Terms and Conditions</a> and <a href="{% url 'core:privacy_policy' %}" target="_blank">Privacy Policy</a>
+                        </label>
+                    </div>
+                    
+                    <div class="d-grid mb-3">
+                        <button type="submit" class="btn btn-primary">Sign Up</button>
+                    </div>
+                    
+                    <div class="text-center">
+                        <p>Already have an account? <a href="{% url 'accounts:login' %}">Login</a></p>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const passwordHelp = document.createElement('div');
+        passwordHelp.className = 'form-text mt-2';
+        passwordHelp.innerHTML = `
+            <strong>Password requirements:</strong>
+            <ul class="mb-0">
+                <li>At least 8 characters long</li>
+                <li>Must contain at least one number</li>
+                <li>Must contain at least one uppercase letter</li>
+                <li>Cannot be similar to your personal information</li>
+            </ul>
+        `;
+        
+        document.getElementById('id_password1').after(passwordHelp);
+    });
+</script>
+{% endblock %}

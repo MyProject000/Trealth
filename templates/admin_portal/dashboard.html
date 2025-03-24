@@ -1,0 +1,142 @@
+{% extends 'base.html' %}
+
+{% block title %}Admin Dashboard{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <h1>Admin Dashboard</h1>
+        <p>Welcome to the administrator dashboard. Manage users, view analytics, and ensure system compliance.</p>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-md-3">
+        <div class="card bg-primary text-white mb-4">
+            <div class="card-body">
+                <h5 class="card-title">Total Doctors</h5>
+                <h2 class="display-4">{{ total_doctors }}</h2>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card bg-success text-white mb-4">
+            <div class="card-body">
+                <h5 class="card-title">Total Patients</h5>
+                <h2 class="display-4">{{ total_patients }}</h2>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card bg-info text-white mb-4">
+            <div class="card-body">
+                <h5 class="card-title">Appointments</h5>
+                <h2 class="display-4">{{ total_appointments }}</h2>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card bg-warning text-white mb-4">
+            <div class="card-body">
+                <h5 class="card-title">Total Earnings</h5>
+                <h2>${{ total_earnings }}</h2>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="card mb-4">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5>Recent Doctors</h5>
+                <a href="{% url 'admin_portal:user_management' %}" class="btn btn-sm btn-primary">View All</a>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Specialization</th>
+                                <th>Joined</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for doctor in recent_doctors %}
+                            <tr>
+                                <td>{{ doctor.full_name }}</td>
+                                <td>{{ doctor.specialization }}</td>
+                                <td>{{ doctor.user.date_joined|date }}</td>
+                                <td>
+                                    <a href="{% url 'admin_portal:user_detail' doctor.user.id %}" class="btn btn-sm btn-info">View</a>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="4">No doctors found.</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-6">
+        <div class="card mb-4">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5>Recent Patients</h5>
+                <a href="{% url 'admin_portal:user_management' %}" class="btn btn-sm btn-primary">View All</a>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Location</th>
+                                <th>Joined</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for patient in recent_patients %}
+                            <tr>
+                                <td>{{ patient.full_name }}</td>
+                                <td>{{ patient.location }}</td>
+                                <td>{{ patient.user.date_joined|date }}</td>
+                                <td>
+                                    <a href="{% url 'admin_portal:user_detail' patient.user.id %}" class="btn btn-sm btn-info">View</a>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="4">No patients found.</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-2">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <h5>Quick Actions</h5>
+            </div>
+            <div class="card-body">
+                <a href="{% url 'admin_portal:user_management' %}" class="btn btn-primary me-2">User Management</a>
+                <a href="{% url 'admin_portal:compliance_security' %}" class="btn btn-warning me-2">Compliance & Security</a>
+                <a href="{% url 'admin_portal:analytics_reports' %}" class="btn btn-info">Analytics & Reports</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

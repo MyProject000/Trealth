@@ -1,0 +1,132 @@
+{% extends 'base.html' %}
+
+{% block title %}FAQs - Medical Appointment System{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <h1>Frequently Asked Questions</h1>
+        <hr>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="accordion" id="faqAccordion">
+            <!-- General Questions -->
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="headingOne">
+                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                        How do I book an appointment with a doctor?
+                    </button>
+                </h2>
+                <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#faqAccordion">
+                    <div class="accordion-body">
+                        To book an appointment, you need to register or log in to your patient account. Then, you can use the "Find Doctor" feature to search for specialists based on their name, specialization, or location. Select a doctor, choose an available time slot, and confirm your booking.
+                    </div>
+                </div>
+            </div>
+            
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="headingTwo">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                        Is my personal and medical information secure?
+                    </button>
+                </h2>
+                <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#faqAccordion">
+                    <div class="accordion-body">
+                        Yes, we take data security seriously. All personal and medical information is encrypted and stored securely. We comply with healthcare privacy regulations and implement stringent security measures to protect your data. Only authorized healthcare providers can access your medical information when necessary for your treatment.
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Patient Questions -->
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="headingThree">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                        How can I cancel or reschedule my appointment?
+                    </button>
+                </h2>
+                <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#faqAccordion">
+                    <div class="accordion-body">
+                        You can cancel or reschedule an appointment by logging into your account, going to the "My Appointments" section, selecting the appointment you wish to modify, and clicking on "Cancel" or "Reschedule." Please note that some doctors may have specific cancellation policies, which will be displayed during the booking process.
+                    </div>
+                </div>
+            </div>
+            
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="headingFour">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
+                        How do I pay for my appointment?
+                    </button>
+                </h2>
+                <div id="collapseFour" class="accordion-collapse collapse" aria-labelledby="headingFour" data-bs-parent="#faqAccordion">
+                    <div class="accordion-body">
+                        We offer multiple payment options including credit/debit cards and online banking. You can pay for your appointment during the booking process or after your consultation. All payments are processed securely through our encrypted payment gateway.
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Doctor Questions -->
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="headingFive">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFive" aria-expanded="false" aria-controls="collapseFive">
+                        I'm a doctor. How do I join the platform?
+                    </button>
+                </h2>
+                <div id="collapseFive" class="accordion-collapse collapse" aria-labelledby="headingFive" data-bs-parent="#faqAccordion">
+                    <div class="accordion-body">
+                        Doctors can join our platform by registering with a doctor account. You'll need to provide your professional details, including your specialization, license number, and hospital affiliations. Our team will verify your credentials before activating your profile.
+                    </div>
+                </div>
+            </div>
+            
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="headingSix">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSix" aria-expanded="false" aria-controls="collapseSix">
+                        How do I manage my availability as a doctor?
+                    </button>
+                </h2>
+                <div id="collapseSix" class="accordion-collapse collapse" aria-labelledby="headingSix" data-bs-parent="#faqAccordion">
+                    <div class="accordion-body">
+                        As a doctor, you can manage your availability through the "Schedule Management" section of your dashboard. You can set your working hours, block off unavailable times, and specify the maximum number of appointments per day.
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Technical Questions -->
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="headingSeven">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSeven" aria-expanded="false" aria-controls="collapseSeven">
+                        I forgot my password. How do I reset it?
+                    </button>
+                </h2>
+                <div id="collapseSeven" class="accordion-collapse collapse" aria-labelledby="headingSeven" data-bs-parent="#faqAccordion">
+                    <div class="accordion-body">
+                        If you forgot your password, click on the "Login" button, then select "Forgot Password." Enter the email address associated with your account, and we'll send you a password reset link. Follow the instructions in the email to create a new password.
+                    </div>
+                </div>
+            </div>
+            
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="headingEight">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseEight" aria-expanded="false" aria-controls="collapseEight">
+                        Does the system work on mobile devices?
+                    </button>
+                </h2>
+                <div id="collapseEight" class="accordion-collapse collapse" aria-labelledby="headingEight" data-bs-parent="#faqAccordion">
+                    <div class="accordion-body">
+                        Yes, our medical appointment system is fully responsive and works on all devices including smartphones, tablets, and desktop computers. You can access all features through your mobile browser without needing to install any apps.
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="mt-4 p-4 bg-light rounded">
+            <h4>Still have questions?</h4>
+            <p>If you couldn't find the answer to your question, please feel free to contact our support team.</p>
+            <a href="{% url 'core:contact' %}" class="btn btn-primary">Contact Support</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

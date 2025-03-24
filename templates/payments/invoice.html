@@ -1,0 +1,150 @@
+{% extends 'base.html' %}
+
+{% block title %}Invoice - Medical Appointment System{% endblock %}
+
+{% block extra_css %}
+<style>
+    @media print {
+        .no-print {
+            display: none;
+        }
+        .print-only {
+            display: block;
+        }
+        body {
+            font-size: 12pt;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="row mb-3 no-print">
+    <div class="col-md-12">
+        <div class="d-flex justify-content-between">
+            <h1>Invoice</h1>
+            <div>
+                <button onclick="window.print()" class="btn btn-primary">
+                    <i class="bi bi-printer me-1"></i> Print Invoice
+                </button>
+                <a href="javascript:history.back()" class="btn btn-outline-secondary ms-2">
+                    <i class="bi bi-arrow-left me-1"></i> Back
+                </a>
+            </div>
+        </div>
+        <hr>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-10 offset-md-1">
+        <div class="card">
+            <div class="card-body">
+                <div class="row mb-4">
+                    <div class="col-md-6">
+                        <h4 class="fw-bold">Medical Appointment System</h4>
+                        <p>123 Healthcare Street<br>
+                        Medical City, MC 12345<br>
+                        Phone: (123) 456-7890<br>
+                        Email: billing@medappointment.com</p>
+                    </div>
+                    
+                    <div class="col-md-6 text-end">
+                        <h4 class="fw-bold text-primary">INVOICE</h4>
+                        <p><strong>Invoice #:</strong> INV-{{ payment.payment_id }}<br>
+                        <strong>Date:</strong> {{ payment.payment_date|date }}<br>
+                        <strong>Payment ID:</strong> {{ payment.payment_id }}<br>
+                        <strong>Status:</strong> 
+                            <span class="badge {% if payment.payment_status == 'completed' %}bg-success{% else %}bg-warning text-dark{% endif %}">
+                                {{ payment.payment_status|title }}
+                            </span>
+                        </p>
+                    </div>
+                </div>
+                
+                <div class="row mb-4">
+                    <div class="col-md-6">
+                        <h5 class="fw-bold">Bill To:</h5>
+                        <p>{{ payment.patient.full_name }}<br>
+                        {{ payment.patient.location }}<br>
+                        Email: {{ payment.patient.user.email }}</p>
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <h5 class="fw-bold">Service Provider:</h5>
+                        <p>Dr. {{ payment.appointment.doctor.full_name }}<br>
+                        {{ payment.appointment.doctor.specialization }}<br>
+                        {{ payment.appointment.doctor.hospital_name }}<br>
+                        {{ payment.appointment.doctor.hospital_location }}</p>
+                    </div>
+                </div>
+                
+                <div class="table-responsive mb-4">
+                    <table class="table table-bordered">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Description</th>
+                                <th>Date</th>
+                                <th class="text-end">Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Medical Consultation with Dr. {{ payment.appointment.doctor.full_name }} ({{ payment.appointment.doctor.specialization }})</td>
+                                <td>{{ payment.appointment.appointment_date|date }}</td>
+                                <td class="text-end">${{ payment.amount }}</td>
+                            </tr>
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td colspan="2" class="text-end fw-bold">Total:</td>
+                                <td class="text-end fw-bold">${{ payment.amount }}</td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-8">
+                        <h5 class="fw-bold">Payment Details:</h5>
+                        <p>Payment Method: Credit Card<br>
+                        Payment Date: {{ payment.payment_date|date }}</p>
+                        
+                        <div class="mb-4">
+                            <h5 class="fw-bold">Notes:</h5>
+                            <p>Thank you for your payment. This invoice serves as a receipt for your appointment.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-4">
+                        <div class="bg-light p-3 rounded">
+                            <h5 class="fw-bold">Payment Summary</h5>
+                            <div class="d-flex justify-content-between">
+                                <span>Subtotal:</span>
+                                <span>${{ payment.amount }}</span>
+                            </div>
+                            <div class="d-flex justify-content-between">
+                                <span>Tax:</span>
+                                <span>$0.00</span>
+                            </div>
+                            <hr>
+                            <div class="d-flex justify-content-between fw-bold">
+                                <span>Total:</span>
+                                <span>${{ payment.amount }}</span>
+                            </div>
+                            <div class="d-flex justify-content-between mt-2">
+                                <span>Amount Paid:</span>
+                                <span>${{ payment.amount }}</span>
+                            </div>
+                            <div class="d-flex justify-content-between">
+                                <span>Balance Due:</span>
+                                <span>$0.00</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

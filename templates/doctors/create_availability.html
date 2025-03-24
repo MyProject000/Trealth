@@ -1,0 +1,100 @@
+{% extends 'base.html' %}
+
+{% block title %}Create Availability - Medical Appointment System{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8 offset-md-2">
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h4 class="mb-0">Add New Availability</h4>
+            </div>
+            <div class="card-body">
+                <div class="alert alert-info">
+                    <i class="bi bi-info-circle-fill me-2"></i>
+                    Set your availability for patient appointments. Make sure to add slots only for dates when you'll be available at the hospital.
+                </div>
+                
+                <form method="post">
+                    {% csrf_token %}
+                    
+                    <div class="mb-3">
+                        <label for="{{ form.date.id_for_label }}" class="form-label">Date</label>
+                        {{ form.date }}
+                        {% if form.date.errors %}
+                            <div class="text-danger">
+                                {{ form.date.errors.0 }}
+                            </div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label for="{{ form.start_time.id_for_label }}" class="form-label">Start Time</label>
+                            {{ form.start_time }}
+                            {% if form.start_time.errors %}
+                                <div class="text-danger">
+                                    {{ form.start_time.errors.0 }}
+                                </div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <label for="{{ form.end_time.id_for_label }}" class="form-label">End Time</label>
+                            {{ form.end_time }}
+                            {% if form.end_time.errors %}
+                                <div class="text-danger">
+                                    {{ form.end_time.errors.0 }}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="{{ form.max_appointments.id_for_label }}" class="form-label">Maximum Appointments</label>
+                        {{ form.max_appointments }}
+                        {% if form.max_appointments.errors %}
+                            <div class="text-danger">
+                                {{ form.max_appointments.errors.0 }}
+                            </div>
+                        {% endif %}
+                        <div class="form-text">Maximum number of appointments you can take on this day</div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="{{ form.status.id_for_label }}" class="form-label">Status</label>
+                        <select name="status" id="{{ form.status.id_for_label }}" class="form-control">
+                            <option value="available">Available</option>
+                            <option value="unavailable">Unavailable</option>
+                        </select>
+                        {% if form.status.errors %}
+                            <div class="text-danger">
+                                {{ form.status.errors.0 }}
+                            </div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="d-flex justify-content-between">
+                        <a href="{% url 'doctors:schedule_management' %}" class="btn btn-outline-secondary">Cancel</a>
+                        <button type="submit" class="btn btn-primary">Save Availability</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        
+        <div class="card mt-4">
+            <div class="card-header">
+                <h5>Tips for Setting Availability</h5>
+            </div>
+            <div class="card-body">
+                <ul>
+                    <li>Set availability at least 1-2 weeks in advance to allow patients sufficient time to book.</li>
+                    <li>Consider blocking off time for lunch and administrative tasks.</li>
+                    <li>If you need to cancel a day with existing appointments, please contact support.</li>
+                    <li>Your time slots will be generated based on your start and end times in one-hour increments.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

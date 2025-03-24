@@ -1,0 +1,304 @@
+{% extends 'base.html' %}
+
+{% block title %}Book Appointment - Medical Appointment System{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <h1>Book an Appointment</h1>
+        <hr>
+    </div>
+</div>
+
+<div class="row mb-4">
+    <div class="col-md-12">
+        <!-- Progress Stepper -->
+        <div class="card">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div class="d-flex flex-column align-items-center">
+                        <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">1</div>
+                        <span class="mt-2">Choose Doctor</span>
+                    </div>
+                    <div class="progress flex-grow-1 mx-2" style="height: 2px;">
+                        <div class="progress-bar" role="progressbar" style="width: 50%;" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
+                    </div>
+                    <div class="d-flex flex-column align-items-center">
+                        <div class="rounded-circle bg-light text-dark d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">2</div>
+                        <span class="mt-2">Select Time</span>
+                    </div>
+                    <div class="progress flex-grow-1 mx-2" style="height: 2px;">
+                        <div class="progress-bar" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                    </div>
+                    <div class="d-flex flex-column align-items-center">
+                        <div class="rounded-circle bg-light text-dark d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">3</div>
+                        <span class="mt-2">Confirm</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <form method="post" id="appointmentForm">
+            {% csrf_token %}
+            
+            <!-- Step 1: Choose Doctor -->
+            <div class="card" id="step1">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">Step 1: Choose a Doctor</h5>
+                </div>
+                <div class="card-body">
+                    {% if form.doctor.errors %}
+                        <div class="alert alert-danger">
+                            {{ form.doctor.errors.0 }}
+                        </div>
+                    {% endif %}
+                    
+                    <div class="row mb-4">
+                        <div class="col-md-12">
+                            <div class="input-group">
+                                <input type="text" id="doctorSearch" class="form-control" placeholder="Search for doctors by name or specialization...">
+                                <button class="btn btn-outline-secondary" type="button">Search</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="{{ form.doctor.id_for_label }}" class="form-label">Select Doctor</label>
+                        {{ form.doctor }}
+                        <div class="form-text">Please select a doctor from the list</div>
+                    </div>
+                    
+                    <div class="row mt-4" id="doctorsList">
+                        {% for doctor in doctors %}
+                            <div class="col-md-6 mb-3">
+                                <div class="card h-100">
+                                    <div class="card-body">
+                                        <h5 class="card-title">Dr. {{ doctor.full_name }}</h5>
+                                        <h6 class="card-subtitle mb-2 text-muted">{{ doctor.specialization }}</h6>
+                                        <p><strong>Experience:</strong> {{ doctor.experience_years }} years</p>
+                                        <p><strong>Hospital:</strong> {{ doctor.hospital_name }}</p>
+                                        <p><strong>Fee:</strong> £{{ doctor.consultation_fee }}</p>
+                                        <div class="form-check">
+                                            <input class="form-check-input doctor-select" type="radio" name="doctor" id="doctor{{ doctor.doctor_id }}" value="{{ doctor.doctor_id }}" data-doctor-id="{{ doctor.doctor_id }}">
+                                            <label class="form-check-label" for="doctor{{ doctor.doctor_id }}">
+                                                Select
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        {% empty %}
+                            <div class="col-md-12">
+                                <div class="alert alert-info">
+                                    No doctors found. Please try a different search.
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                    
+                    <div class="d-grid mt-3">
+                        <button type="button" class="btn btn-primary" id="step1Next">Next: Select Time</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Step 2: Select Time -->
+            <div class="card mt-4" id="step2" style="display: none;">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">Step 2: Select Appointment Time</h5>
+                </div>
+                <div class="card-body">
+                    {% if form.appointment_date.errors or form.time_slot.errors %}
+                        <div class="alert alert-danger">
+                            {% if form.appointment_date.errors %}{{ form.appointment_date.errors.0 }}{% endif %}
+                            {% if form.time_slot.errors %}{{ form.time_slot.errors.0 }}{% endif %}
+                        </div>
+                    {% endif %}
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="{{ form.appointment_date.id_for_label }}" class="form-label">Select Date</label>
+                                {{ form.appointment_date }}
+                                <div class="form-text">Please select an available date</div>
+                            </div>
+                            
+                            <div class="alert alert-info">
+                                <i class="bi bi-info-circle-fill me-2"></i>
+                                <strong>Selected Doctor:</strong> <span id="selectedDoctorName">Not selected</span>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <h5>Available Time Slots</h5>
+                            <div class="mb-3">
+                                <label for="{{ form.time_slot.id_for_label }}" class="form-label">Select Time Slot</label>
+                                {{ form.time_slot }}
+                            </div>
+                            
+                            <div class="mt-3">
+                                <div class="d-flex align-items-center mb-2">
+                                    <div class="bg-success me-2" style="width: 20px; height: 20px; border-radius: 4px;"></div>
+                                    <span>Available</span>
+                                </div>
+                                <div class="d-flex align-items-center">
+                                    <div class="bg-secondary me-2" style="width: 20px; height: 20px; border-radius: 4px;"></div>
+                                    <span>Booked</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="d-flex justify-content-between mt-3">
+                        <button type="button" class="btn btn-outline-secondary" id="step2Back">Back: Choose Doctor</button>
+                        <button type="button" class="btn btn-primary" id="step2Next">Next: Confirm Details</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Step 3: Confirm Appointment -->
+            <div class="card mt-4" id="step3" style="display: none;">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">Step 3: Confirm Appointment</h5>
+                </div>
+                <div class="card-body">
+                    <div class="alert alert-info">
+                        Please review your appointment details below before confirming.
+                    </div>
+                    
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <h5>Appointment Details</h5>
+                            <p><strong>Doctor:</strong> <span id="summaryDoctorName">Not selected</span></p>
+                            <p><strong>Specialization:</strong> <span id="summarySpecialization">Not selected</span></p>
+                            <p><strong>Date:</strong> <span id="summaryDate">Not selected</span></p>
+                            <p><strong>Time:</strong> <span id="summaryTime">Not selected</span></p>
+                            <p><strong>Fee:</strong> £<span id="summaryFee">0.00</span></p>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <h5>Additional Information</h5>
+                            <div class="mb-3">
+                                <label for="{{ form.symptoms_description.id_for_label }}" class="form-label">Symptoms Description (Optional)</label>
+                                {{ form.symptoms_description }}
+                                <div class="form-text">Briefly describe your symptoms or reason for the appointment</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3 form-check">
+                        <input type="checkbox" class="form-check-input" id="agree_terms" name="agree_terms" required>
+                        <label class="form-check-label" for="agree_terms">
+                            I confirm that the information provided is correct and I agree to the appointment terms.
+                        </label>
+                    </div>
+                    
+                    <div class="d-flex justify-content-between mt-3">
+                        <button type="button" class="btn btn-outline-secondary" id="step3Back">Back: Select Time</button>
+                        <button type="submit" class="btn btn-success">Confirm Appointment</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Step navigation
+        const step1 = document.getElementById('step1');
+        const step2 = document.getElementById('step2');
+        const step3 = document.getElementById('step3');
+        
+        const step1Next = document.getElementById('step1Next');
+        const step2Back = document.getElementById('step2Back');
+        const step2Next = document.getElementById('step2Next');
+        const step3Back = document.getElementById('step3Back');
+        
+        // Step 1 to Step 2
+        step1Next.addEventListener('click', function() {
+            const doctorSelect = document.querySelector('select[name="doctor"]');
+            if (doctorSelect.value) {
+                step1.style.display = 'none';
+                step2.style.display = 'block';
+                
+                // Update doctor name in step 2
+                const doctorOption = doctorSelect.options[doctorSelect.selectedIndex];
+                document.getElementById('selectedDoctorName').textContent = doctorOption.text;
+            } else {
+                alert('Please select a doctor to proceed.');
+            }
+        });
+        
+        // Step 2 to Step 1
+        step2Back.addEventListener('click', function() {
+            step2.style.display = 'none';
+            step1.style.display = 'block';
+        });
+        
+        // Step 2 to Step 3
+        step2Next.addEventListener('click', function() {
+            const dateInput = document.querySelector('input[name="appointment_date"]');
+            const timeSlotSelect = document.querySelector('select[name="time_slot"]');
+            
+            if (dateInput.value && timeSlotSelect.value) {
+                step2.style.display = 'none';
+                step3.style.display = 'block';
+                
+                // Update summary in step 3
+                const doctorSelect = document.querySelector('select[name="doctor"]');
+                const doctorOption = doctorSelect.options[doctorSelect.selectedIndex];
+                
+                document.getElementById('summaryDoctorName').textContent = doctorOption.text;
+                document.getElementById('summarySpecialization').textContent = 'Specialization'; // This would need to be fetched
+                document.getElementById('summaryDate').textContent = dateInput.value;
+                document.getElementById('summaryTime').textContent = timeSlotSelect.options[timeSlotSelect.selectedIndex].text;
+                document.getElementById('summaryFee').textContent = '100.00'; // This would need to be fetched
+            } else {
+                alert('Please select both date and time to proceed.');
+            }
+        });
+        
+        // Step 3 to Step 2
+        step3Back.addEventListener('click', function() {
+            step3.style.display = 'none';
+            step2.style.display = 'block';
+        });
+        
+        // Doctor selection in the cards should update the select element
+        const doctorRadios = document.querySelectorAll('.doctor-select');
+        doctorRadios.forEach(radio => {
+            radio.addEventListener('change', function() {
+                if (this.checked) {
+                    const doctorId = this.getAttribute('data-doctor-id');
+                    document.querySelector('select[name="doctor"]').value = doctorId;
+                }
+            });
+        });
+        
+        // Doctor search functionality
+        const doctorSearch = document.getElementById('doctorSearch');
+        doctorSearch.addEventListener('input', function() {
+            const searchTerm = this.value.toLowerCase();
+            const doctorCards = document.querySelectorAll('#doctorsList .card');
+            
+            doctorCards.forEach(card => {
+                const doctorName = card.querySelector('.card-title').textContent.toLowerCase();
+                const specialization = card.querySelector('.card-subtitle').textContent.toLowerCase();
+                
+                if (doctorName.includes(searchTerm) || specialization.includes(searchTerm)) {
+                    card.closest('.col-md-6').style.display = 'block';
+                } else {
+                    card.closest('.col-md-6').style.display = 'none';
+                }
+            });
+        });
+    });
+</script>
+{% endblock %}
