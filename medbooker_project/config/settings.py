@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-y8znb4p=hi(=^ou)w5)e4r%pjsst_d$1sh0s9(_(-tz1^exg*d
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['trealth.onrender.com', 'localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['trealth.onrender.com', 'localhost', '127.0.0.1','8abe937b-3dd5-4a6e-bbc1-b7507b9674de-00-2uzxa8f7se6hz.picard.replit.dev']
 
 
 # Application definition
